@@ -20,7 +20,7 @@ use tls_api::TlsConnector;
 use tls_api::TlsConnectorBuilder;
 
 fn main() {
-  let port = 50052;
+  let port = 443;
   let client_conf = Default::default();
 
   let tls_connector = tls_api_native_tls::TlsConnector::builder().unwrap();
