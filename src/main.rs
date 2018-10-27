@@ -33,6 +33,6 @@ fn main() {
   println!("Sending request {:?}", req);
   let resp = client.assist(grpc::RequestOptions::new(), StreamingRequest::once(req));
   println!("Sent");
-  let (metadata, _stream) = resp.0.wait().unwrap();
+  let (metadata, _stream) = resp.wait().unwrap();
   println!("metadata: {:?}", metadata);
 }
