@@ -1,4 +1,4 @@
-extern crate grpc;
+extern crate grpcio;
 extern crate futures;
 extern crate protobuf;
 extern crate tls_api_native_tls;
@@ -10,29 +10,37 @@ mod embedded_assistant_grpc;
 mod latlng;
 
 use std::sync::Arc;
-use std::net::ToSocketAddrs;
-use grpc::ClientStub;
-use grpc::StreamingRequest;
+use std::fs;
+use grpcio::*;
 use embedded_assistant::*;
 use embedded_assistant_grpc::*;
+use futures::future;
 use futures::future::Future;
-use tls_api::TlsConnector;
-use tls_api::TlsConnectorBuilder;
+use futures::Stream;
+use futures::Sink;
 
 fn main() {
-  let port = 443;
-  let client_conf = Default::default();
-
-  let tls_connector = tls_api_native_tls::TlsConnector::builder().unwrap();
-  let tls_option = httpbis::ClientTlsOption::Tls("embeddedassistant.googleapis.com".to_owned(), Arc::new(tls_connector.build().unwrap()));
-  let addr = ("embeddedassistant.googleapis.com", port).to_socket_addrs().unwrap().next().unwrap();
-  let grpc_client = Arc::new(grpc::Client::new_expl(&addr, "embeddedassistant.googleapis.com", tls_option, client_conf).unwrap());
-  let client = EmbeddedAssistantClient::with_client(grpc_client);
+  let env = Arc::new(Environment::new(2));
+  let root_cert = fs::read("/home/qwandor/projects/qhome/gtsr2.pem").expect("tls.cert file not found");
+  let credentials = ChannelCredentialsBuilder::new().root_cert(root_cert).build();
+  let channel = ChannelBuilder::new(env).secure_connect("embeddedassistant.googleapis.com:443", credentials);
+  let client = EmbeddedAssistantClient::new(channel);
   
+  let (mut sink, mut receiver) = client.assist().unwrap();
   let req = AssistRequest::new();
   println!("Sending request {:?}", req);
-  let resp = client.assist(grpc::RequestOptions::new(), StreamingRequest::once(req));
+  sink = sink.send((req, WriteFlags::default())).wait().unwrap();
   println!("Sent");
-  let (metadata, _stream) = resp.wait().unwrap();
-  println!("metadata: {:?}", metadata);
+  future::poll_fn(|| sink.close()).wait().unwrap();
+  println!("Flushed");
+
+  match receiver.into_future().wait() {
+    Ok((Some(response), r)) => {
+      println!("response: {:?}", response);
+    },
+    Ok((None, _)) => {
+      println!("no response");
+    },
+    Err((e, _)) => panic!("error {:?}", e),
+  }
 }
