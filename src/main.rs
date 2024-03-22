@@ -27,6 +27,7 @@ async fn main() -> Result<(), Report> {
 
     let config = Config::from_file()?;
     let token = get_token(&config).await?;
-    make_request(token, "bedside lamp on for 10 seconds".to_string()).await?;
+    make_request(&token, "bedside lamp on").await?;
+    make_request(&token, "bedside lamp off").await?;
     Ok(())
 }

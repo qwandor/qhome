@@ -57,7 +57,7 @@ pub async fn get_token(config: &Config) -> Result<String, Report> {
     Ok(token_response.access_token().secret().clone())
 }
 
-pub async fn make_request(bearer: String, command: String) -> Result<(), Report> {
+pub async fn make_request(bearer: &str, command: &str) -> Result<(), Report> {
     let tls_config = ClientTlsConfig::new()
         .ca_certificate(Certificate::from_pem(CERTIFICATES))
         .domain_name(ASSISTANT_API_HOSTNAME);
@@ -75,7 +75,7 @@ pub async fn make_request(bearer: String, command: String) -> Result<(), Report>
         });
 
     let config = AssistConfig {
-        r#type: Some(assist_config::Type::TextQuery(command)),
+        r#type: Some(assist_config::Type::TextQuery(command.to_string())),
         audio_out_config: Some(AudioOutConfig {
             encoding: Encoding::Mp3.into(),
             sample_rate_hertz: 16000,
