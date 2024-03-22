@@ -22,7 +22,7 @@ use googapis::{
     },
     CERTIFICATES,
 };
-use log::{error, info};
+use log::trace;
 use oauth2::{
     reqwest::async_http_client,
     {AuthUrl, ClientId, ClientSecret, RefreshToken, TokenResponse, TokenUrl},
@@ -93,9 +93,9 @@ pub async fn make_request(bearer: &str, command: &str) -> Result<(), Report> {
     let request = futures::stream::once(async move { request });
     let response = service.assist(request).await?;
 
-    info!("Response: {:?}", response);
+    trace!("Response: {:?}", response);
     if let Some(msg) = response.into_inner().message().await? {
-        error!("Error message: {:?}", msg);
+        trace!("Response message: {:?}", msg);
     }
 
     Ok(())
