@@ -1,9 +1,24 @@
 [package]
 name = "qhome"
 version = "0.1.0"
-authors = ["qwandor"]
+authors = ["Andrew Walbran <qwandor@gmail.com>"]
+edition = "2021"
 
 [dependencies]
-protobuf = "2"
-hyper = "0.11"
-reqwest = "0.8"
+eyre = "0.6.12"
+futures = "0.3.16"
+googapis = { version = "0.6.0", features = [
+    "google-assistant-embedded-v1alpha2",
+] }
+log = "0.4.21"
+oauth2 = "4.1.0"
+pretty_env_logger = "0.5.0"
+serde = "1.0.197"
+toml = "0.8.12"
+tokio = { version = "1.9", features = [
+    "rt-multi-thread",
+    "time",
+    "fs",
+    "macros",
+] }
+tonic = { version = "0.6.2", features = ["tls"] }
