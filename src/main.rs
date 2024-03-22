@@ -14,20 +14,57 @@
 
 mod assistant;
 mod config;
+mod radio;
 
 use crate::{
     assistant::{get_token, make_request},
     config::Config,
 };
 use eyre::Report;
+use log::{error, info, warn};
+use radio::Radio;
+use rfbutton::{decode, Code};
 
 #[tokio::main]
 async fn main() -> Result<(), Report> {
     pretty_env_logger::init();
 
     let config = Config::from_file()?;
-    let token = get_token(&config).await?;
-    make_request(&config, &token, "bedside lamp on").await?;
-    make_request(&config, &token, "bedside lamp off").await?;
+
+    let mut radio = Radio::init()?;
+
+    loop {
+        match radio.receive() {
+            Ok(pulses) => {
+                if pulses.len() > 10 {
+                    info!("{} pulses: {:?}...", pulses.len(), &pulses[0..10]);
+                } else {
+                    info!("{} pulses: {:?}", pulses.len(), pulses);
+                }
+                match decode(&pulses) {
+                    Ok(code) => {
+                        if code.length > 0 {
+                            info!("Decoded: {:?}", code);
+                            handle_code(&config, code).await?;
+                        } else {
+                            warn!("Decoded 0 bits.");
+                        }
+                    }
+                    Err(e) => {
+                        error!("Decode error: {}", e);
+                    }
+                }
+            }
+            Err(e) => {
+                error!("Receive error: {}", e);
+            }
+        }
+    }
+}
+
+async fn handle_code(config: &Config, code: Code) -> Result<(), Report> {
+    let token = get_token(config).await?;
+    make_request(config, &token, "bedside lamp on").await?;
+    make_request(config, &token, "bedside lamp off").await?;
     Ok(())
 }
