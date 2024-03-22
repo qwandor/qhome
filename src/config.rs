@@ -24,6 +24,8 @@ pub struct Config {
     pub client_id: String,
     pub client_secret: String,
     pub refresh_token: String,
+    pub device_id: String,
+    pub device_model_id: String,
 }
 
 impl Config {

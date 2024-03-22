@@ -38,9 +38,6 @@ const OAUTH_TOKEN_URL: &str = "https://oauth2.googleapis.com/token";
 const ASSISTANT_API_HOSTNAME: &str = "embeddedassistant.googleapis.com";
 const ASSISTANT_API_URL: &str = "https://embeddedassistant.googleapis.com";
 
-const DEVICE_ID: &str = "my_device_id";
-const DEVICE_MODEL_ID: &str = "qhome-887f8-qhome-button-ty2jrt";
-
 pub async fn get_token(config: &Config) -> Result<String, Report> {
     let client = oauth2::basic::BasicClient::new(
         ClientId::new(config.client_id.to_string()),
@@ -57,7 +54,7 @@ pub async fn get_token(config: &Config) -> Result<String, Report> {
     Ok(token_response.access_token().secret().clone())
 }
 
-pub async fn make_request(bearer: &str, command: &str) -> Result<(), Report> {
+pub async fn make_request(config: &Config, bearer: &str, command: &str) -> Result<(), Report> {
     let tls_config = ClientTlsConfig::new()
         .ca_certificate(Certificate::from_pem(CERTIFICATES))
         .domain_name(ASSISTANT_API_HOSTNAME);
@@ -82,8 +79,8 @@ pub async fn make_request(bearer: &str, command: &str) -> Result<(), Report> {
             volume_percentage: 50,
         }),
         device_config: Some(DeviceConfig {
-            device_id: DEVICE_ID.to_owned(),
-            device_model_id: DEVICE_MODEL_ID.to_owned(),
+            device_id: config.device_id.to_owned(),
+            device_model_id: config.device_model_id.to_owned(),
         }),
         ..Default::default()
     };
