@@ -21,9 +21,13 @@ use crate::{
     config::Config,
 };
 use eyre::Report;
-use log::{error, info, warn};
+use log::{debug, error, info, warn};
 use radio::Radio;
 use rfbutton::{decode, Code};
+use std::time::{Duration, Instant};
+
+/// The minimum amount of time between repeating a command for the same button code.
+const MIN_REPEAT_DURATION: Duration = Duration::from_secs(5);
 
 #[tokio::main]
 async fn main() -> Result<(), Report> {
@@ -32,6 +36,11 @@ async fn main() -> Result<(), Report> {
     let config = Config::from_file()?;
 
     let mut radio = Radio::init()?;
+    let mut last_code_time = Instant::now();
+    let mut last_code = Code {
+        value: 0,
+        length: 0,
+    };
 
     loop {
         match radio.receive() {
@@ -45,7 +54,12 @@ async fn main() -> Result<(), Report> {
                     Ok(code) => {
                         if code.length > 0 {
                             info!("Decoded: {:?}", code);
-                            handle_code(&config, code).await?;
+                            let now = Instant::now();
+                            if code != last_code || now > last_code_time + MIN_REPEAT_DURATION {
+                                handle_code(&config, &code).await?;
+                                last_code = code;
+                                last_code_time = now;
+                            }
                         } else {
                             warn!("Decoded 0 bits.");
                         }
@@ -62,8 +76,8 @@ async fn main() -> Result<(), Report> {
     }
 }
 
-async fn handle_code(config: &Config, code: Code) -> Result<(), Report> {
-    if let Some(command) = config.commands.get(&code) {
+async fn handle_code(config: &Config, code: &Code) -> Result<(), Report> {
+    if let Some(command) = config.commands.get(code) {
         info!("Code {:?} corresponds to command {:?}.", code, command);
         let token = get_token(config).await?;
         make_request(config, &token, command).await?;
