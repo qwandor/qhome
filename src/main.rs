@@ -21,7 +21,7 @@ use crate::{
     config::Config,
 };
 use eyre::Report;
-use log::{debug, error, info, warn};
+use log::{debug, error, info, trace, warn};
 use radio::Radio;
 use rfbutton::{decode, Code};
 use std::time::{Duration, Instant};
@@ -59,6 +59,8 @@ async fn main() -> Result<(), Report> {
                                 handle_code(&config, &code).await?;
                                 last_code = code;
                                 last_code_time = now;
+                            } else {
+                                trace!("Ignoring repeated code.");
                             }
                         } else {
                             warn!("Decoded 0 bits.");
