@@ -64,8 +64,11 @@ async fn main() -> Result<(), Report> {
 
 async fn handle_code(config: &Config, code: Code) -> Result<(), Report> {
     if let Some(command) = config.commands.get(&code) {
+        info!("Code {:?} corresponds to command {:?}.", code, command);
         let token = get_token(config).await?;
         make_request(config, &token, command).await?;
+    } else {
+        info!("No command for code {:?}.", code);
     }
     Ok(())
 }
