@@ -1,6 +1,8 @@
-# qHome
+# qButton Pi
 
-Experiments with the Google Assistant API.
+qButton Pi is a version qButton which runs on a Raspberry Pi. It uses an attached CC1101 radio
+module to listen to 433 MHz RF button codes, and maps to commands to send to Google Assistant via
+its API.
 
 ## Disclaimer
 

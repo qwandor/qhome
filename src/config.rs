@@ -17,7 +17,7 @@ use rfbutton::Code;
 use serde::Deserialize;
 use std::{collections::HashMap, fs::read_to_string};
 
-const CONFIG_FILENAME: &str = "qhome.toml";
+const CONFIG_FILENAME: &str = "qbutton-pi.toml";
 
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -50,6 +50,6 @@ mod tests {
     /// Parsing the example config file should not give any errors.
     #[test]
     fn example_config() {
-        Config::read("qhome.example.toml").unwrap();
+        Config::read("qbutton-pi.example.toml").unwrap();
     }
 }

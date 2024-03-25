@@ -1,5 +1,5 @@
 [package]
-name = "qhome"
+name = "qbutton-pi"
 version = "0.1.0"
 authors = ["Andrew Walbran <qwandor@gmail.com>"]
 edition = "2021"
