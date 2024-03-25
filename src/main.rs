@@ -37,9 +37,9 @@ async fn main() -> Result<(), Report> {
         match radio.receive() {
             Ok(pulses) => {
                 if pulses.len() > 10 {
-                    info!("{} pulses: {:?}...", pulses.len(), &pulses[0..10]);
+                    debug!("{} pulses: {:?}...", pulses.len(), &pulses[0..10]);
                 } else {
-                    info!("{} pulses: {:?}", pulses.len(), pulses);
+                    debug!("{} pulses: {:?}", pulses.len(), pulses);
                 }
                 match decode(&pulses) {
                     Ok(code) => {
