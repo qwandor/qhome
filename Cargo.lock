@@ -1018,10 +1018,11 @@ dependencies = [
 
 [[package]]
 name = "rfbutton"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "527f15257ddcaa426b315e024c5c636c85d3df348ce1ff4369ef4adbb4e22972"
+checksum = "1bcf84b451b2943a5ccbfc7c152d890aa4bf5b86d3358d39298d37108140e475"
 dependencies = [
+ "serde",
  "thiserror",
 ]
 

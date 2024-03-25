@@ -13,8 +13,9 @@
 // limitations under the License.
 
 use eyre::{Report, WrapErr};
+use rfbutton::Code;
 use serde::Deserialize;
-use std::fs::read_to_string;
+use std::{collections::HashMap, fs::read_to_string};
 
 const CONFIG_FILENAME: &str = "qhome.toml";
 
@@ -26,6 +27,8 @@ pub struct Config {
     pub refresh_token: String,
     pub device_id: String,
     pub device_model_id: String,
+    #[serde(default)]
+    pub commands: HashMap<Code, String>,
 }
 
 impl Config {

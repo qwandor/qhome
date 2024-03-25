@@ -63,8 +63,9 @@ async fn main() -> Result<(), Report> {
 }
 
 async fn handle_code(config: &Config, code: Code) -> Result<(), Report> {
-    let token = get_token(config).await?;
-    make_request(config, &token, "bedside lamp on").await?;
-    make_request(config, &token, "bedside lamp off").await?;
+    if let Some(command) = config.commands.get(&code) {
+        let token = get_token(config).await?;
+        make_request(config, &token, command).await?;
+    }
     Ok(())
 }

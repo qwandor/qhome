@@ -15,7 +15,7 @@ googapis = { version = "0.6.0", features = [
 log = "0.4.21"
 oauth2 = "4.1.0"
 pretty_env_logger = "0.5.0"
-rfbutton = "0.1.0"
+rfbutton = "0.1.1"
 rppal = { version = "0.17.1", features = ["hal"] }
 serde = "1.0.197"
 toml = "0.8.12"

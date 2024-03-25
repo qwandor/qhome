@@ -3,3 +3,7 @@ client_secret = ""
 refresh_token = ""
 device_id = "my_device_id"
 device_model_id = ""
+
+[commands]
+123456 = "dining room lights on"
+abcdef = "dining room lights off"
