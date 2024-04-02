@@ -19,7 +19,7 @@ rfbutton = "0.1.1"
 rppal = { version = "0.17.1", features = ["hal"] }
 serde = "1.0.197"
 toml = "0.8.12"
-tokio = { version = "1.9", features = [
+tokio = { version = "1.37", features = [
     "rt-multi-thread",
     "time",
     "fs",
