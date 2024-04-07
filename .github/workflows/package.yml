@@ -68,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: debian-package-${{ matrix.target }}
-          path: target/${{ matrix.target }}/debian/
+          path: target/${{ matrix.target }}/debian/*.deb
 
   release:
     name: Draft release
