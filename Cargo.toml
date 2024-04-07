@@ -31,3 +31,30 @@ tokio = { version = "1.37", features = [
     "macros",
 ] }
 tonic = { version = "0.6.2", features = ["tls"] }
+
+[package.metadata.deb]
+# $auto doesn't work because we don't build packages in the same container as we build the binaries.
+depends = "libc6"
+section = "net"
+maintainer-scripts = "debian-scripts"
+conf-files = ["/etc/qbutton-pi.toml"]
+assets = [
+    [
+        "target/release/qbutton-pi",
+        "usr/bin/",
+        "755",
+    ],
+    [
+        "qbutton-pi.example.toml",
+        "etc/qbutton-pi.toml",
+        "640",
+    ],
+    [
+        "README.md",
+        "usr/share/doc/qbutton-pi/",
+        "644",
+    ],
+]
+
+# This section needs to be here even if it's empty, for the systemd integration to work.
+[package.metadata.deb.systemd-units]

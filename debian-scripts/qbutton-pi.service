@@ -1,0 +1,16 @@
+[Unit]
+Description=Service to send Google Assistant commands in response to 433 MHz RF codes.
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/etc/
+Environment=RUST_BACKTRACE=1
+Environment=RUST_LIB_BACKTRACE=1
+Environment=RUST_LOG=info
+ExecStart=/usr/bin/qbutton-pi
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target
