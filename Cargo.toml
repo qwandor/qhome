@@ -3,6 +3,11 @@ name = "qbutton-pi"
 version = "0.1.0"
 authors = ["Andrew Walbran <qwandor@gmail.com>"]
 edition = "2021"
+description = "Service to send Google Assistant commands in response to 433 MHz RF codes."
+license = "Apache-2.0"
+repository = "https://github.com/qwandor/qbutton-pi"
+keywords = ["rf", "433mhz", "googleassistant"]
+categories = ["network-programming"]
 
 [dependencies]
 cc1101 = { version = "0.1.3", features = ["std"] }
