@@ -47,7 +47,7 @@ impl Radio {
         let mut rx_pin = gpio.get(RX_PIN)?.into_input();
         let cs = gpio.get(CS_PIN)?.into_output();
         let spibus = Spi::new(Bus::Spi0, SlaveSelect::Ss0, 1_000_000, Mode::Mode0)?;
-        let spi = ExclusiveDevice::new(spibus, cs, Delay);
+        let spi = ExclusiveDevice::new(spibus, cs, Delay)?;
         let mut cc1101 =
             Cc1101::new(spi).map_err(|e| eyre!("Error creating CC1101 device: {:?}", e))?;
 
